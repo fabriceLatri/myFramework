@@ -3,5 +3,6 @@
 /config/*
 /data/*
 /logs/*
-/www/**
+/www/vendor
+/www/composer.lock
 .DS_Store
