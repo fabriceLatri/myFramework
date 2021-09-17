@@ -2,7 +2,8 @@
 
 namespace Tests\Framework;
 
-use GuzzleHttp\Psr7\Request;
+use Framework\Router;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
@@ -20,7 +21,7 @@ class RouterTest extends TestCase
 
     public function testGetMethod()
     {
-        $request = new Request('GET', '/blog');
+        $request = new ServerRequest('GET', '/blog');
         $this->router->get('/blog', function () {
             return 'Hello';
         }, 'blog');
@@ -31,7 +32,7 @@ class RouterTest extends TestCase
 
     public function testGetMethodIfURLDoesNotExists()
     {
-        $request = new Request('GET', '/blog');
+        $request = new ServerRequest('GET', '/blog');
         $this->router->get('/blogaze', function () {
             return 'Hello';
         }, 'blog');
@@ -41,7 +42,7 @@ class RouterTest extends TestCase
 
     public function testGetMethodWithParams()
     {
-        $request = new Request('GET', '/blog/mon-slug-8');
+        $request = new ServerRequest('GET', '/blog/mon-slug-8');
         $this->router->get('/blog', function () {
             return 'azezea';
         }, 'posts');
