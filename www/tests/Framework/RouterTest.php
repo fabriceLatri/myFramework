@@ -43,15 +43,32 @@ class RouterTest extends TestCase
     public function testGetMethodWithParams()
     {
         $request = new ServerRequest('GET', '/blog/mon-slug-8');
+        $this->router->addMatchTypes(array('customSlug' => '[a-z0-9\-]+'));
         $this->router->get('/blog', function () {
             return 'azezea';
         }, 'posts');
-        $this->router->get('/blog/{slug:[a-z0-9\-]+}-{id:\d+}', function () {
+        $this->router->get('/blog/[customSlug:slug]-[i:id]', function () {
             return 'Hello';
         }, 'post.show');
         $route = $this->router->match($request);
         $this->assertEquals('post.show', $route->getName());
         $this->assertEquals('Hello', call_user_func_array($route->getCallBack(), [$request]));
         $this->assertEquals(['slug' => 'mon-slug', 'id' => '8'], $route->getParams());
+        // Test invalid url
+        $route = $this->router->match(new ServerRequest('GET', '/blog/mon_slug-8'));
+        $this->assertEquals(null, $route);
+    }
+
+    public function testGenerateUri()
+    {
+        $this->router->addMatchTypes(array('customSlug' => '[a-z0-9\-]+'));
+        $this->router->get('/blog', function () {
+            return 'azezea';
+        }, 'posts');
+        $this->router->get('/blog/[customSlug:slug]-[i:id]', function () {
+            return 'Hello';
+        }, 'post.show');
+        $uri = $this->router->generateUri('post.show', ['slug' => 'mon-article', 'id' => 8]);
+        $this->assertEquals('/blog/mon-article-8', $uri);
     }
 }

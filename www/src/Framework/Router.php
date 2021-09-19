@@ -30,6 +30,16 @@ class Router
     }
 
     /**
+     * Permet de configurer un type de recherche pour faire matcher certaines routes
+     * @param string[] $matcheTypes
+     * @return void
+     */
+    public function addMatchTypes(array $matchTypes): void
+    {
+        $this->router->addMatchTypes($matchTypes);
+    }
+
+    /**
      * @param ServerRequestInterface $request
      * @return Route|null
      */
@@ -37,11 +47,23 @@ class Router
     {
         $getUri = $request->getUri()->getPath();
         $getMethod = $request->getMethod();
-        die;
         $result = $this->router->match($getUri, $getMethod);
         if ($result) {
-            new Route($result['name'], $result['target'], $result['params']);
+            return new Route($result['name'], $result['target'], $result['params']);
         }
         return null;
+    }
+
+        
+    /**
+     * generateUri génère une route
+     *
+     * @param  string $name
+     * @param  array $params
+     * @return string
+     */
+    public function generateUri(string $name, array $params): string
+    {
+        return $this->router->generate($name, $params);
     }
 }
