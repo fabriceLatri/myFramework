@@ -7,6 +7,7 @@ use Framework\App;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
 use Tests\Framework\Modules\ErroredModule;
+use Tests\Framework\Modules\StringModule;
 
 class AppTest extends TestCase
 {
@@ -36,7 +37,7 @@ class AppTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testthrowExceptionIfNoResponseSent()
+    public function testThrowExceptionIfNoResponseSent()
     {
         $app = new App([
           ErroredModule::class
@@ -44,6 +45,17 @@ class AppTest extends TestCase
         $request = new ServerRequest('GET', '/demo');
         $this->expectException(\Exception::class);
         $response = $app->run($request);
+    }
+
+    public function testtConvertStringToResponse()
+    {
+        $app = new App([
+          StringModule::class
+        ]);
+        $request = new ServerRequest('GET', '/demo');
+        $response = $app->run($request);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $response);
+        $this->assertEquals('DEMO', (string)$response->getBody());
     }
 
     public function testError404()

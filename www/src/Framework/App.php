@@ -50,9 +50,10 @@ class App
             return new Response(404, [], '<h1>Erreur 404</h1>');
         }
         
-        foreach ($route->getParams() as $key => $value) {
-            $request = $request->withAttribute($key, $value);
-        }
+        $params = $route->getParams();
+        $request = array_reduce(array_keys($params), function ($request, $key) use ($params) {
+            return $request->withAttribute($key, $params[$key]);
+        }, $request);
         
         $response = call_user_func_array($route->getCallback(), [$request]);
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Blog\BlogModule;
+
 require "../vendor/autoload.php";
 
 $app = new \Framework\App([
