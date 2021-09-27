@@ -21,10 +21,10 @@ class Router
 
     /**
      * @param  mixed $path
-     * @param  mixed $callable
+     * @param  string|callable $callable
      * @param  mixed $name
      */
-    public function get(string $path, callable $callable, string $name)
+    public function get(string $path, $callable, string $name)
     {
         $this->router->map('GET', $path, $callable, $name);
     }

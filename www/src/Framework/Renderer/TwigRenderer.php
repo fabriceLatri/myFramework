@@ -3,6 +3,7 @@
 namespace Framework\Renderer;
 
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 use Twig\Loader\FilesystemLoader;
 
 class TwigRenderer implements RendererInterface
@@ -11,10 +12,10 @@ class TwigRenderer implements RendererInterface
 
     private $loader;
 
-    public function __construct(string $path)
+    public function __construct(FilesystemLoader $loader, Environment $twig)
     {
-        $this->loader = new FilesystemLoader($path);
-        $this->twig = new Environment($this->loader, []);
+        $this->loader = $loader;
+        $this->twig = $twig;
     }
 
     /**
