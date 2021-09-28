@@ -13,6 +13,7 @@ foreach ($modules as $module) {
         $builder->addDefinitions($module::DEFINITIONS);
     }
 }
+$builder->addDefinitions(dirname(__DIR__) . '/config.php');
 $container = $builder->build();
 
 $renderer = $container->get(Framework\Renderer\RendererInterface::class);

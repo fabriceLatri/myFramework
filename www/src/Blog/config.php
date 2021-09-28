@@ -1,6 +1,9 @@
 <?php
 
 use App\Blog\BlogModule;
+use App\Blog\DemoExtension as BlogDemoExtension;
+use Blog\DemoExtension;
+
 use function \DI\autowire;
 use function \DI\get;
 
