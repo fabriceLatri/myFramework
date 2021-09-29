@@ -11,6 +11,10 @@ class BlogModule extends Module
 {
     const DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
 
+    const MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'migrations';
+
+    const SEEDS = __DIR__ . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'seeds';
+
     public function __construct(string $prefix, Router $router, RendererInterface $renderer)
     {
         $renderer->addPath(
