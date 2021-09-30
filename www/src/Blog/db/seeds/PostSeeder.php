@@ -28,8 +28,6 @@ class PostSeeder extends AbstractSeed
                 
             ];
         }
-        var_dump($data);
-        die;
         $this->table('posts')
         ->insert($data)
         ->save();
