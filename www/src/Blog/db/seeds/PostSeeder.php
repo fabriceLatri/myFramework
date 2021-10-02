@@ -22,7 +22,7 @@ class PostSeeder extends AbstractSeed
             $data[] = [
                 'name' => $faker->catchPhrase,
                 'slug' => $faker->slug,
-                'content' => $faker->text,
+                'content' => $faker->text(3000),
                 'created_at' => $date,
                 'updated_at' => $date
                 

@@ -22,7 +22,7 @@ class BlogModule extends Module
             __DIR__ . DIRECTORY_SEPARATOR .'views'
         );
         $router->addMatchTypes(array('slug' => '[a-z\-0-9]+'));
-        $router->get($prefix . '/[slug:slug]', BlogAction::class, 'blog.show');
+        $router->get($prefix . '/[slug:slug]-[i:id]', BlogAction::class, 'blog.show');
         $router->get($prefix, BlogAction::class, 'blog.index');
     }
 }
