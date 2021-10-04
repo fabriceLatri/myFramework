@@ -1,0 +1,8 @@
+language: php
+
+before_script:
+  - docker-compose up -d
+  - docker-compose ps
+
+script:
+  - docker-compose exec webserver ./vendor/bin/phpunit -colors
