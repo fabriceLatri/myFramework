@@ -22,8 +22,8 @@ services:
       APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT-/var/www/html/public}
       PMA_PORT: ${HOST_MACHINE_PMA_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    # extra_hosts:
+    #   - 'host.docker.internal:host-gateway'
 
   database:
     build:
