@@ -2,6 +2,7 @@ language: php
 
 before_script:
   - docker-compose up -d
+  - docker-compose exec webserver composer install
   - docker-compose ps
 
 script:
