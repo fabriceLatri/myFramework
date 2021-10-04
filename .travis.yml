@@ -1,9 +1,8 @@
 language: php
 
 before_script:
-  - docker-compose up -d
-  - docker-compose exec webserver composer install
-  - docker-compose ps
+  - cd www
+  - composer install
 
 script:
-  - docker-compose exec webserver ./vendor/bin/phpunit -colors
+  - ./vendor/bin/phpunit -colors
