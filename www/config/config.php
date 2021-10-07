@@ -4,6 +4,7 @@ use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
 use Framework\Router\RouterTwigExtension;
+use Framework\Twig\PagerFantaExtension;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -13,8 +14,10 @@ return [
     'database.name' => 'docker',
     'views.path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views',
     'twig.extensions' => [
-        DI\get(RouterTwigExtension::class)
+        DI\get(RouterTwigExtension::class),
+        DI\get(PagerFantaExtension::class)
     ],
+    
     Router::class => \DI\autowire(),
     RendererInterface::class => \DI\factory(TwigRendererFactory::class),
     \PDO::class => function (ContainerInterface $c) {

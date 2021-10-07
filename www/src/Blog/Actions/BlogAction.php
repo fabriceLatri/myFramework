@@ -43,12 +43,13 @@ class BlogAction
 
     public function __invoke(Request $request)
     {
-        return $request->getAttribute('id') ? $this->show($request) : $this->index();
+        return $request->getAttribute('id') ? $this->show($request) : $this->index($request);
     }
 
-    public function index(): string
+    public function index(Request $request): string
     {
-        $posts = $this->postTable->findPaginated();
+        $params = $request->getQueryParams();
+        $posts = $this->postTable->findPaginated(12, $params['p'] ?? 1);
         return $this->renderer->render('@blog/index', compact('posts'));
     }
 
