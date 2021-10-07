@@ -4,8 +4,8 @@ namespace Framework\Database;
 
 use Pagerfanta\Adapter\AdapterInterface;
 
-
-class PaginatedQuery implements AdapterInterface {
+class PaginatedQuery implements AdapterInterface
+{
 
     /**
      * @var \PDO

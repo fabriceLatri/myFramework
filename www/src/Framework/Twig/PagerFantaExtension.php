@@ -8,7 +8,8 @@ use Pagerfanta\Pagerfanta;
 use Twig\Extension\AbstractExtension;
 use Pagerfanta\View\TwitterBootstrap4View;
 
-class PagerFantaExtension extends AbstractExtension {
+class PagerFantaExtension extends AbstractExtension
+{
 
     /**
      * @var Router
@@ -30,13 +31,12 @@ class PagerFantaExtension extends AbstractExtension {
 
     public function paginate(Pagerfanta $paginatedResults, string $route, array $queryArgs = [])
     {
-
         $view = new TwitterBootstrap4View();
         return $view->render($paginatedResults, function ($page) use ($route, $queryArgs) {
             if ($page > 1) {
                 $queryArgs['p'] = $page;
             }
-            $this->router->generateUri($route, [], $queryArgs);
+            return $this->router->generateUri($route, [], $queryArgs);
         });
     }
 }
