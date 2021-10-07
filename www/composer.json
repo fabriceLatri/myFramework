@@ -26,6 +26,6 @@
     "altorouter/altorouter": "^2.0",
     "twig/twig": "^3.3",
     "php-di/php-di": "^6.3",
-    "pagerfanta/pagerfanta": "^3.3"
+    "pagerfanta/pagerfanta": "^2.7.2"
   }
 }
