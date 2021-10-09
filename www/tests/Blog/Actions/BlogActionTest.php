@@ -5,6 +5,7 @@ namespace Test\Blog\Actions;
 use Framework\Router;
 use PHPUnit\Framework\TestCase;
 use App\Blog\Actions\BlogAction;
+use App\Blog\Entity\Post;
 use App\Blog\Table\PostTable;
 use GuzzleHttp\Psr7\ServerRequest;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -59,9 +60,9 @@ class BlogActionTest extends TestCase
         );
     }
 
-    public function makePost(int $id, string $slug): \stdClass
+    public function makePost(int $id, string $slug): Post
     {
-        $post = new \stdClass();
+        $post = new Post();
         $post->id = $id;
         $post->slug = $slug;
         return $post;

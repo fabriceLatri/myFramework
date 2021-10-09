@@ -2,6 +2,7 @@
 
 namespace App\Blog\Table;
 
+use App\Blog\Entity\Post;
 use Pagerfanta\Pagerfanta;
 use Framework\Database\PaginatedQuery;
 
@@ -30,7 +31,8 @@ class PostTable
         $query = new PaginatedQuery(
             $this->pdo,
             "SELECT * FROM posts",
-            "SELECT COUNT(id) FROM posts"
+            "SELECT COUNT(id) FROM posts ORDER BY created_at DESC",
+            Post::class
         );
 
         return (new Pagerfanta($query))
@@ -42,12 +44,13 @@ class PostTable
      * Récupère un article à partir de son id
      *
      * @param  integer $id
-     * @return stdClass
+     * @return Post
      */
-    public function find(int $id): \stdClass
+    public function find(int $id): Post
     {
         $query = $this->pdo->prepare('SELECT * FROM posts WHERE id= ?');
         $query->execute([$id]);
+        $query->setFetchMode(\PDO::FETCH_CLASS, Post::class);
         return $query->fetch();
     }
 }
