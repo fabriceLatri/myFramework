@@ -2,9 +2,11 @@
 
 namespace App\Blog;
 
-use App\Blog\Actions\BlogAction;
 use Framework\Module;
 use Framework\Router;
+use App\Blog\Actions\BlogAction;
+use App\Blog\Actions\AdminBlogAction;
+use Psr\Container\ContainerInterface;
 use Framework\Renderer\RendererInterface;
 
 class BlogModule extends Module
@@ -15,14 +17,20 @@ class BlogModule extends Module
 
     const SEEDS = __DIR__ . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'seeds';
 
-    public function __construct(string $prefix, Router $router, RendererInterface $renderer)
+    public function __construct(ContainerInterface $container)
     {
-        $renderer->addPath(
+        $container->get(RendererInterface::class)->addPath(
             'blog',
             __DIR__ . DIRECTORY_SEPARATOR .'views'
         );
+        $router = $container->get(Router::class);
         $router->addMatchTypes(array('slug' => '[a-z\-0-9]+'));
-        $router->get($prefix . '/[slug:slug]-[i:id]', BlogAction::class, 'blog.show');
-        $router->get($prefix, BlogAction::class, 'blog.index');
+        $router->get($container->get('blog.prefix') . '/[slug:slug]-[i:id]', BlogAction::class, 'blog.show');
+        $router->get($container->get('blog.prefix'), BlogAction::class, 'blog.index');
+
+        if ($container->has('admin.prefix')) {
+            $prefix = $container->get('admin.prefix');
+            $router->get("$prefix/posts", AdminBlogAction::class, 'admin.blog.index');
+        }
     }
 }
