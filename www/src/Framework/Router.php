@@ -24,9 +24,19 @@ class Router
      * @param  string|callable $callable
      * @param  mixed $name
      */
-    public function get(string $path, $callable, string $name)
+    public function get(string $path, $callable, ?string $name = null)
     {
         $this->router->map('GET', $path, $callable, $name);
+    }
+
+    /**
+     * @param  mixed $path
+     * @param  string|callable $callable
+     * @param  mixed $name
+     */
+    public function post(string $path, $callable, ?string $name = null)
+    {
+        $this->router->map('POST', $path, $callable, $name);
     }
 
     /**

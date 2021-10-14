@@ -53,4 +53,54 @@ class PostTable
         $query->setFetchMode(\PDO::FETCH_CLASS, Post::class);
         return $query->fetch() ?: null;
     }
+    
+    /**
+     * Met à jour un enregistrement au niveu de la base de données
+     *
+     * @param  int $id
+     * @param  string[] $params
+     * @return bool
+     */
+    public function update(int $id, array $params): bool
+    {
+        $fieldQuery = $this->buildFieldQuery($params);
+        
+        $params['id'] = $id;
+
+        $statement = $this->pdo->prepare("UPDATE posts SET $fieldQuery WHERE id = :id");
+        return $statement->execute($params);
+    }
+    
+        
+    /**
+     * insert
+     *
+     * @param  mixed $params
+     * @return bool
+     */
+    public function insert(array $params): bool
+    {
+        $fields = array_keys($params);
+        $values = array_map(function ($field) {
+            return ':' . $field;
+        }, $fields);
+
+
+        $statement = $this->pdo
+        ->prepare("INSERT INTO posts (" . join(',', $fields) . ") VALUES (" . join(',', $values) . ")");
+        return $statement->execute($params);
+    }
+    
+    /**
+     * buildFieldQuery
+     *
+     * @param  mixed $params
+     * @return string
+     */
+    private function buildFieldQuery($params): string
+    {
+        return join(', ', array_map(function ($field) {
+            return "$field = :$field";
+        }, array_keys($params)));
+    }
 }

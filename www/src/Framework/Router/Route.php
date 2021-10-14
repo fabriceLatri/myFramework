@@ -22,7 +22,7 @@ class Route
      * @param  mixed $params
      * @return void
      */
-    public function __construct(string $name, $callback, array $params)
+    public function __construct(?string $name = null, $callback, array $params)
     {
         $this->name = $name;
         $this->callback = $callback;

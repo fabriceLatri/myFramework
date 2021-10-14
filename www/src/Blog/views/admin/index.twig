@@ -3,6 +3,12 @@
 {% block title "Editer les articles"%}
 
 {% block body %}
+
+<p class="text-right">
+  <a href="{{ path('blog.admin.create') }}" class="btn btn-primary">
+    Ajouter un article
+  </a>
+</p>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -14,11 +20,15 @@
     {% for item in items %}
     <tr>
       <td>{{ item.name }}</td>
-      <td> </td>
+      <td>
+        <a href="{{ path('blog.admin.edit', {id: item.id}) }}" class="btn btn-primary">
+          Editer
+        </a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
-{{ paginate(items, 'admin.blog.index') }}
+{{ paginate(items, 'blog.admin.index') }}
 {% endblock %}
