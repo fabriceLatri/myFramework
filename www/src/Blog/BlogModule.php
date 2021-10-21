@@ -27,14 +27,10 @@ class BlogModule extends Module
         $router->addMatchTypes(array('slug' => '[a-z\-0-9]+'));
         $router->get($container->get('blog.prefix') . '/[slug:slug]-[i:id]', BlogAction::class, 'blog.show');
         $router->get($container->get('blog.prefix'), BlogAction::class, 'blog.index');
-
+        
         if ($container->has('admin.prefix')) {
             $prefix = $container->get('admin.prefix');
-            $router->get("$prefix/posts", AdminBlogAction::class, 'blog.admin.index');
-            $router->get("$prefix/posts/new", AdminBlogAction::class, 'blog.admin.create');
-            $router->post("$prefix/posts/new", AdminBlogAction::class);
-            $router->get("$prefix/posts/[i:id]", AdminBlogAction::class, 'blog.admin.edit');
-            $router->post("$prefix/posts/[i:id]", AdminBlogAction::class);
+            $router->crud("$prefix/posts", AdminBlogAction::class, 'blog.admin');
         }
     }
 }

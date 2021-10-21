@@ -44,6 +44,9 @@ class AdminBlogAction
 
     public function __invoke(Request $request)
     {
+        if ($request->getMethod() === 'DELETE') {
+            return $this->delete($request);
+        }
         if (substr((string)$request->getUri(), -3) === 'new') {
             return $this->create($request);
         }
@@ -72,6 +75,7 @@ class AdminBlogAction
 
         if ($request->getMethod() === 'POST') {
             $params = $this->getParams($request);
+            $params['updated_at'] = date('Y-m-d H:i:s');
             $this->postTable->update($item->id, $params);
             return $this->redirect('blog.admin.index');
         }
@@ -82,20 +86,35 @@ class AdminBlogAction
     /**
      * Crée un nouvel article
      *
-     * @param  mixed $request
-     * @return void
+     * @param  Request $request
+     * @return string
      */
     public function create(Request $request)
     {
-        $item = $this->postTable->find($request->getAttribute('id'));
-
         if ($request->getMethod() === 'POST') {
             $params = $this->getParams($request);
+            $params = array_merge($params, [
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
             $this->postTable->insert($params);
             return $this->redirect('blog.admin.index');
         }
 
-        return $this->renderer->render('@blog/admin/create', compact('item'));
+        return $this->renderer->render('@blog/admin/create');
+    }
+    
+    /**
+     * delete
+     *
+     * @param  Request $request
+     * @return string
+     */
+    public function delete(Request $request)
+    {
+        $this->postTable->delete($request->getAttribute('id'));
+
+        return $this->redirect('blog.admin.index');
     }
 
     /**

@@ -52,4 +52,27 @@ class PostTableTest extends DatabaseTestCase
         $this->assertEquals('Salut', $post->name);
         $this->assertEquals('demo', $post->slug);
     }
+
+    public function testDelete()
+    {
+        $this->postTable->insert([
+            'name' => 'Salut',
+            'slug' => 'demo',
+            'content' => 'salut',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        $this->postTable->insert([
+            'name' => 'Salut',
+            'slug' => 'demo',
+            'content' => 'salut',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        $count = $this->pdo->query('SELECT COUNT(id) FROM posts')->fetchColumn();
+        $this->assertEquals(2, (int) $count);
+        $this->postTable->delete($this->pdo->lastInsertId());
+        $count = $this->pdo->query('SELECT COUNT(id) FROM posts')->fetchColumn();
+        $this->assertEquals(1, (int) $count);
+    }
 }

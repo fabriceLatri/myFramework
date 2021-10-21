@@ -40,6 +40,34 @@ class Router
     }
 
     /**
+     * @param  mixed $path
+     * @param  string|callable $callable
+     * @param  mixed $name
+     */
+    public function delete(string $path, $callable, ?string $name = null)
+    {
+        $this->router->map('DELETE', $path, $callable, $name);
+    }
+    
+    /**
+     * crud
+     *
+     * @param  string $prefixPath
+     * @param  string $callable
+     * @param  string $prefixName
+     * @return void
+     */
+    public function crud(string $prefixPath, string $callable, string $prefixName)
+    {
+        $this->get("$prefixPath", $callable, "$prefixName.index");
+        $this->get("$prefixPath/new", $callable, "$prefixName.create");
+        $this->post("$prefixPath/new", $callable);
+        $this->get("$prefixPath/[i:id]", $callable, "$prefixName.edit");
+        $this->post("$prefixPath/[i:id]", $callable);
+        $this->delete("$prefixPath/[i:id]", $callable, "$prefixName.delete");
+    }
+
+    /**
      * Permet de configurer un type de recherche pour faire matcher certaines routes
      * @param string[] $matcheTypes
      * @return void

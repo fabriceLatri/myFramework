@@ -24,6 +24,10 @@
         <a href="{{ path('blog.admin.edit', {id: item.id}) }}" class="btn btn-primary">
           Editer
         </a>
+        <form style="display: inline" action="{{ path('blog.admin.delete', {id: item.id}) }}" method="POST" onsubmit="return confirm('êtes-vous sûr ?')">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-danger">Supprimer</button>
+        </form>
       </td>
     </tr>
     {% endfor %}

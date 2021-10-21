@@ -30,7 +30,7 @@ class PostTable
     {
         $query = new PaginatedQuery(
             $this->pdo,
-            "SELECT * FROM posts",
+            "SELECT * FROM posts ORDER BY created_at DESC",
             "SELECT COUNT(id) FROM posts ORDER BY created_at DESC",
             Post::class
         );
@@ -73,7 +73,7 @@ class PostTable
     
         
     /**
-     * insert
+     * Ajoute un enregistrement
      *
      * @param  mixed $params
      * @return bool
@@ -89,6 +89,19 @@ class PostTable
         $statement = $this->pdo
         ->prepare("INSERT INTO posts (" . join(',', $fields) . ") VALUES (" . join(',', $values) . ")");
         return $statement->execute($params);
+    }
+    
+    /**
+     * Supprime un enregistrement
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        $statement = $this->pdo->prepare('DELETE FROM posts WHERE id = ?');
+
+        return $statement->execute([$id]);
     }
     
     /**
