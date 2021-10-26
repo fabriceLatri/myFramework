@@ -24,7 +24,7 @@ trait RouterAwareAction
     {
         $redirectUri = $this->router->generateUri($path, $params);
         return new Response(301, [
-            'location' => $redirectUri
+            'Location' => $redirectUri
         ]);
     }
 }
