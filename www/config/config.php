@@ -4,6 +4,8 @@ use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
 use Framework\Router\RouterTwigExtension;
+use Framework\Session\PHPSession;
+use Framework\Session\SessionInterface;
 use Framework\Twig\PagerFantaExtension;
 use Framework\Twig\TextExtension;
 use Framework\Twig\TimeExtension;
@@ -21,7 +23,7 @@ return [
         DI\get(TimeExtension::class),
         DI\get(PagerFantaExtension::class)
     ],
-    
+    SessionInterface::class => \DI\autowire(PHPSession::$class),
     Router::class => \DI\autowire(),
     RendererInterface::class => \DI\factory(TwigRendererFactory::class),
     \PDO::class => function (ContainerInterface $c) {

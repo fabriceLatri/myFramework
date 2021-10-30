@@ -6,6 +6,7 @@ use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
+use Framework\Session\SessionInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -32,14 +33,26 @@ class AdminBlogAction
      * @var Framework\Router
      */
     private $router;
+    
+    /**
+     * session
+     *
+     * @var SessionInterface
+     */
+    private $session;
 
     use RouterAwareAction;
 
-    public function __construct(RendererInterface $renderer, Router $router, PostTable $postTable)
-    {
+    public function __construct(
+        RendererInterface $renderer,
+        Router $router,
+        PostTable $postTable,
+        SessionInterface $session
+    ) {
         $this->renderer = $renderer;
         $this->postTable = $postTable;
         $this->router = $router;
+        $this->session = $session;
     }
 
     public function __invoke(Request $request)
@@ -60,7 +73,8 @@ class AdminBlogAction
     {
         $params = $request->getQueryParams();
         $items = $this->postTable->findPaginated(12, $params['p'] ?? 1);
-        return $this->renderer->render('@blog/admin/index', compact('items'));
+        $session = $this->session;
+        return $this->renderer->render('@blog/admin/index', compact('items', 'session'));
     }
 
     /**
@@ -69,7 +83,7 @@ class AdminBlogAction
      * @param  Request $request
      * @return string|ResponseInterface
      */
-    public function edit(Request $request): string|ResponseInterface
+    public function edit(Request $request)
     {
         $item = $this->postTable->find($request->getAttribute('id'));
 
@@ -77,6 +91,7 @@ class AdminBlogAction
             $params = $this->getParams($request);
             $params['updated_at'] = date('Y-m-d H:i:s');
             $this->postTable->update($item->id, $params);
+            $this->session->set('success', 'L\'article a bien été modifié');
             return $this->redirect('blog.admin.index');
         }
 
