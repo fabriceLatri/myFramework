@@ -26,6 +26,7 @@ services:
       - 'host.docker.internal:host-gateway'
 
   database:
+    platform: linux/x86_64
     build:
       context: './bin/${DATABASE}'
     container_name: '${COMPOSE_PROJECT_NAME}-database'

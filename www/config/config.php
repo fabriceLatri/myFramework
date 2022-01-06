@@ -23,7 +23,7 @@ return [
         DI\get(TimeExtension::class),
         DI\get(PagerFantaExtension::class)
     ],
-    SessionInterface::class => \DI\autowire(PHPSession::$class),
+    SessionInterface::class => \DI\autowire(PHPSession::class),
     Router::class => \DI\autowire(),
     RendererInterface::class => \DI\factory(TwigRendererFactory::class),
     \PDO::class => function (ContainerInterface $c) {

@@ -17,8 +17,8 @@
     "squizlabs/php_codesniffer": "*",
     "phpunit/phpunit": "^9.5",
     "robmorgan/phinx": "^0.12.8",
-    "fzaninotto/faker": "^1.5",
-    "phpspec/prophecy-phpunit": "^2.0"
+    "phpspec/prophecy-phpunit": "^2.0",
+    "fzaninotto/faker": "dev-master"
   },
   "require": {
     "guzzlehttp/psr7": "^2.0",
