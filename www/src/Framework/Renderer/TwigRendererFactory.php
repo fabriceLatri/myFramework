@@ -2,9 +2,9 @@
 
 namespace Framework\Renderer;
 
-use Framework\Router\RouterTwigExtension;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 class TwigRendererFactory
@@ -13,7 +13,8 @@ class TwigRendererFactory
     {
         $viewPath = $container->get('views.path');
         $loader = new FilesystemLoader($viewPath);
-        $twig = new Environment($loader);
+        $twig = new Environment($loader, ['debug' => true]);
+        $twig->addExtension(new DebugExtension());
         if ($container->has('twig.extensions')) {
             foreach ($container->get('twig.extensions') as $extension) {
                 $twig->addExtension($extension);
