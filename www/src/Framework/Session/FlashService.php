@@ -10,7 +10,16 @@ class FlashService
      */
     private $session;
 
+    /**
+     * @var string
+     */
     private $sessionKey = 'flash';
+
+    /**
+     * @var string[]
+     */
+    private $messages;
+
 
     public function __construct(SessionInterface $session)
     {
@@ -24,11 +33,21 @@ class FlashService
         $this->session->set($this->sessionKey, $flash);
     }
 
-    public function get(string $type): ?string
+    public function error(string $message)
     {
         $flash = $this->session->get($this->sessionKey, []);
-        if (array_key_exists($type, $flash)) {
-            return $flash[$type];
+        $flash['error'] = $message;
+        $this->session->set($this->sessionKey, $flash);
+    }
+
+    public function get(string $type): ?string
+    {
+        if (is_null($this->messages)) {
+            $this->messages = $this->session->get($this->sessionKey, []);
+            $this->session->delete($this->sessionKey);
+        }
+        if (array_key_exists($type, $this->messages)) {
+            return $this->messages[$type];
         }
         return null;
     }

@@ -112,6 +112,7 @@ class AdminBlogAction
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
             $this->postTable->insert($params);
+            $this->flash->success('L\'article a bien été créé');
             return $this->redirect('blog.admin.index');
         }
 

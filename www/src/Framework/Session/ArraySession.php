@@ -9,7 +9,7 @@ class ArraySession implements SessionInterface
     /**
      * @var array
      */
-    private $session;
+    private $session = [];
 
     /**
          * Recupere une information en session
