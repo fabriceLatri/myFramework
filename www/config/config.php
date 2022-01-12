@@ -2,6 +2,7 @@
 
 use Framework\Router;
 use Framework\Session\PHPSession;
+use Framework\Twig\FormExtension;
 use Framework\Twig\TextExtension;
 use Framework\Twig\TimeExtension;
 use Framework\Twig\FlashExtension;
@@ -23,7 +24,8 @@ return [
         DI\get(TextExtension::class),
         DI\get(TimeExtension::class),
         DI\get(PagerFantaExtension::class),
-        DI\get(FlashExtension::class)
+        DI\get(FlashExtension::class),
+        DI\get(FormExtension::class)
     ],
     SessionInterface::class => \DI\autowire(PHPSession::class),
     Router::class => \DI\autowire(),
