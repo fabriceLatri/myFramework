@@ -7,7 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class ValidatorTest extends TestCase
 {
-    private function makeValidator(array $params) {
+    private function makeValidator(array $params)
+    {
         return new Validator($params);
     }
 
@@ -48,21 +49,27 @@ class ValidatorTest extends TestCase
             $this->assertCount(0, $errors);
     }
 
-    public function testSlugSuccess() {
+    public function testSlugSuccess()
+    {
         $errors = $this->makeValidator([
-            'slug' => 'aze-aze-azeaze34'
+            'slug' => 'aze-aze-azeaze34',
+            'slug' => 'azeaze'
         ])
             ->slug('slug')
+            ->slug('slug2')
             ->getErrors();
 
         $this->assertCount(0, $errors);
     }
 
-    public function testSlugError() {
+    public function testSlugError()
+    {
         $errors = $this->makeValidator([
             'slug' => 'aze-aze-azeAze34',
             'slug2' => 'aze-aze_azeaze34',
+            'slug4' => 'aze-azeaze-',
             'slug3' => 'aze--aze-aze'
+            
         ])
         ->slug('slug')
         ->slug('slug2')
@@ -70,16 +77,16 @@ class ValidatorTest extends TestCase
         ->slug('slug4')
         ->getErrors();
 
-        $this->assertCount(3, $errors);
+        $this->assertEquals(['slug', 'slug2', 'slug3', 'slug4'], array_keys($errors));
     }
 
-    public function testLength() {
+    public function testLength()
+    {
         $params = ['slug' => '123456789'];
 
         $this->assertCount(0, $this->makeValidator($params)->length('slug', 3)->getErrors());
         $errors = $this->makeValidator($params)->length('slug', 12)->getErrors();
         $this->assertCount(1, $errors);
-        $this->assertEquals('Le champs slug doit contenir plus de 12 caractères', (string)$errors['slug']);
         $this->assertCount(1, $this->makeValidator($params)->length('slug', 3, 4)->getErrors());
         $this->assertCount(0, $this->makeValidator($params)->length('slug', 3, 20)->getErrors());
         $this->assertCount(0, $this->makeValidator($params)->length('slug', null, 20)->getErrors());
