@@ -14,7 +14,7 @@ class ValidatorError
         'slug' => 'Le champs %s n\'est pas un slug valide',
         'minlength' => 'Le champs %s doit contenir plus de %d caractères',
         'maxlength' => 'Le champs %s doit contenir moins de %d caractères',
-        'betwween' => 'Le champs %s doit contenir entre %d et %d caractères',
+        'between' => 'Le champs %s doit contenir entre %d et %d caractères',
         'datetime' => 'Le champs %s doit être une date valide (%s)'
     ];
 
