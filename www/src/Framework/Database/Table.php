@@ -41,7 +41,7 @@ class Table
         $query = new PaginatedQuery(
             $this->pdo,
             $this->paginationQuery(),
-            'SELECT COUNT(id) FROM posts',
+            "SELECT COUNT(id) FROM {$this->table}",
             $this->entity
         );
 

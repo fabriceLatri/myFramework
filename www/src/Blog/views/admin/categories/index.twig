@@ -1,19 +1,18 @@
 {% extends "@admin/layout.twig" %}
 
-{% block title "Editer les articles"%}
+{% block title "Editer les catégories"%}
 
 {% block body %}
 
 <p class="text-right">
   <a href="{{ path(routePrefix ~ '.create') }}" class="btn btn-primary">
-    Ajouter un article
+    Ajouter une catégorie
   </a>
 </p>
 <table class="table table-striped">
   <thead>
     <tr>
       <td>Titre</td>
-      <td>Catégorie</td>
       <td>Actions</td>
     </tr>
   </thead>
@@ -21,7 +20,6 @@
     {% for item in items %}
     <tr>
       <td>{{ item.name }}</td>
-      <td>{{ item.category_name }}</td>
       <td>
         <a href="{{ path(routePrefix ~ '.edit', {id: item.id}) }}" class="btn btn-primary">
           Editer
