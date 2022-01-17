@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Blog\Actions;
+namespace Framework\Actions;
 
-use App\Blog\Entity\Post;
 use Framework\Router;
 use Framework\Validator;
-use App\Blog\Table\PostTable;
 use Framework\Session\FlashService;
-use Psr\Http\Message\ResponseInterface;
-use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AdminBlogAction
+class CrudAction
 {
     /**
      * renderer
@@ -24,9 +20,9 @@ class AdminBlogAction
     /**
      * postTable
      *
-     * @var App\Blog\Table\PostTable
+     * @var mixed
      */
-    private $postTable;
+    private $table;
 
     /**
      * router
@@ -42,22 +38,42 @@ class AdminBlogAction
      */
     private $flash;
 
+    /**
+     * @var string
+     */
+    protected $viewPath;
+
+    /**
+     * @var string
+     */
+    protected $routePrefix;
+
+    /**
+     * @var string[]
+     */
+    protected $messages = [
+        'create' => 'L\'élément a bien été créé',
+        'edit'   => 'L\'élément a bien été modifié'
+    ];
+
     use RouterAwareAction;
 
     public function __construct(
         RendererInterface $renderer,
         Router $router,
-        PostTable $postTable,
+        $table,
         FlashService $flash
     ) {
         $this->renderer = $renderer;
-        $this->postTable = $postTable;
+        $this->table = $table;
         $this->router = $router;
         $this->flash = $flash;
     }
 
     public function __invoke(Request $request)
     {
+        $this->renderer->addGlobal('viewPath', $this->viewPath);
+        $this->renderer->addGlobal('routePrefix', $this->routePrefix);
         if ($request->getMethod() === 'DELETE') {
             return $this->delete($request);
         }
@@ -70,16 +86,21 @@ class AdminBlogAction
         return $this->index($request);
     }
 
+    /**
+     * Affiche la liste des éléments
+     * @param Request $request
+     * @return string
+     */
     public function index(Request $request): string
     {
         $params = $request->getQueryParams();
-        $items = $this->postTable->findPaginated(12, $params['p'] ?? 1);
+        $items = $this->table->findPaginated(12, $params['p'] ?? 1);
 
-        return $this->renderer->render('@blog/admin/index', compact('items'));
+        return $this->renderer->render($this->viewPath . '/index', compact('items'));
     }
 
     /**
-     * Edite un article
+     * Edite un éléménts
      *
      * @param  Request $request
      * @return string|ResponseInterface
@@ -87,7 +108,7 @@ class AdminBlogAction
     public function edit(Request $request)
     {
         $errors = [];
-        $item = $this->postTable->find($request->getAttribute('id'));
+        $item = $this->table->find($request->getAttribute('id'));
 
         if ($request->getMethod() === 'POST') {
             $params = $this->getParams($request);
@@ -95,9 +116,9 @@ class AdminBlogAction
             $validator = $this->getValidator($request);
 
             if ($validator->isValid()) {
-                $this->postTable->update($item->id, $params);
-                $this->flash->success('L\'article a bien été modifié');
-                return $this->redirect('blog.admin.index');
+                $this->table->update($item->id, $params);
+                $this->flash->success($this->messages['edit']);
+                return $this->redirect($this->routePrefix . '.index');
             }
 
             $errors = $validator->getErrors();
@@ -105,7 +126,7 @@ class AdminBlogAction
             $item = $params;
         }
 
-        return $this->renderer->render('@blog/admin/edit', compact('item', 'errors'));
+        return $this->renderer->render($this->viewPath . '/edit', compact('item', 'errors'));
     }
 
     /**
@@ -117,22 +138,21 @@ class AdminBlogAction
     public function create(Request $request)
     {
         $errors = [];
+        $item = $this->getNewEntity();
         if ($request->getMethod() === 'POST') {
             $params = $this->getParams($request);
             $validator = $this->getValidator($request);
 
             if ($validator->isValid()) {
-                $this->postTable->insert($params);
-                $this->flash->success('L\'article a bien été créé');
-                return $this->redirect('blog.admin.index');
+                $this->table->insert($params);
+                $this->flash->success($this->messages['create']);
+                return $this->redirect($this->routePrefix . '.index');
             }
 
             $errors = $validator->getErrors();
         }
-        $item = new Post();
-        $item->created_at = new \DateTime();
 
-        return $this->renderer->render('@blog/admin/create', compact('item', 'errors'));
+        return $this->renderer->render($this->viewPath . '/create', compact('item', 'errors'));
     }
     
     /**
@@ -143,9 +163,9 @@ class AdminBlogAction
      */
     public function delete(Request $request)
     {
-        $this->postTable->delete($request->getAttribute('id'));
+        $this->table->delete($request->getAttribute('id'));
 
-        return $this->redirect('blog.admin.index');
+        return $this->redirect($this->routePrefix . '.index');
     }
 
     /**
@@ -154,25 +174,20 @@ class AdminBlogAction
      * @param  mixed $request
      * @return string[]
      */
-    private function getParams(Request $request): array
+    protected function getParams(Request $request): array
     {
-        $params =  array_filter($request->getParsedBody(), function ($key) {
+        return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, ['name', 'content', 'slug', 'created_at']);
         }, ARRAY_FILTER_USE_KEY);
-
-        return array_merge($params, [
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
     }
 
-    private function getValidator(Request $request)
+    protected function getValidator(Request $request)
     {
-        return (new Validator($request->getParsedBody()))
-            ->required('content', 'name', 'slug', 'created_at')
-            ->length('content', 10)
-            ->length('name', 2, 250)
-            ->length('slug', 2, 50)
-            ->datetime('created_at')
-            ->slug('slug');
+        return (new Validator($request->getParsedBody()));
+    }
+
+    protected function getNewEntity()
+    {
+        return [];
     }
 }

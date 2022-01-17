@@ -42,6 +42,5 @@ class TableTest extends TestCase
         $test = $this->table->find(1);
         $this->assertInstanceOf(\stdClass::class, $test);
         $this->assertEquals('a1', $test->name);
-
     }
 }

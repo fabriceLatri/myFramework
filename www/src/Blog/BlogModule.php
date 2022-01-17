@@ -5,7 +5,7 @@ namespace App\Blog;
 use Framework\Module;
 use Framework\Router;
 use App\Blog\Actions\BlogAction;
-use App\Blog\Actions\AdminBlogAction;
+use App\Blog\Actions\PostCrudAction;
 use Psr\Container\ContainerInterface;
 use Framework\Renderer\RendererInterface;
 
@@ -30,7 +30,7 @@ class BlogModule extends Module
         
         if ($container->has('admin.prefix')) {
             $prefix = $container->get('admin.prefix');
-            $router->crud("$prefix/posts", AdminBlogAction::class, 'blog.admin');
+            $router->crud("$prefix/posts", PostCrudAction::class, 'blog.admin');
         }
     }
 }

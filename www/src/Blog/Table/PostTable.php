@@ -22,6 +22,6 @@ class PostTable extends Table
 
     protected function paginationQuery(): string
     {
-        return parent::paginationQuery() . " ORDER BY created_ar DESC";
+        return parent::paginationQuery() . " ORDER BY created_at DESC";
     }
 }
