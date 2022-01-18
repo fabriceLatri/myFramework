@@ -50,4 +50,13 @@ class TableTest extends TestCase
         $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a2");');
         $this->assertEquals([ '1' => 'a1', '2' => 'a2' ], $this->table->findList());
     }
+
+    public function testExists()
+    {
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a1");');
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a2");');
+        $this->assertTrue($this->table->exists(1));
+        $this->assertTrue($this->table->exists(2));
+        $this->assertFalse($this->table->exists(3));
+    }
 }

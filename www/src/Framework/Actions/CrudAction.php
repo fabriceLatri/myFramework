@@ -4,6 +4,7 @@ namespace Framework\Actions;
 
 use Framework\Router;
 use Framework\Validator;
+use Framework\Database\Table;
 use Framework\Session\FlashService;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,7 +21,7 @@ class CrudAction
     /**
      * postTable
      *
-     * @var mixed
+     * @var Table
      */
     private $table;
 
@@ -61,7 +62,7 @@ class CrudAction
     public function __construct(
         RendererInterface $renderer,
         Router $router,
-        $table,
+        Table $table,
         FlashService $flash
     ) {
         $this->renderer = $renderer;

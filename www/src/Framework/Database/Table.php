@@ -166,6 +166,18 @@ class Table
     }
 
     /**
+     * Vérifie qu'un enregistrement existe
+     * @param int $id
+     * @return bool
+     */
+    public function exists(int $id): bool
+    {
+        $statement = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE id = ?");
+        $statement->execute([$id]);
+        return $statement->fetchColumn() !== false;
+    }
+
+    /**
      * Get the value of entity
      * @return string\null
      */

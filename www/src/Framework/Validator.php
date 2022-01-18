@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use Framework\Database\Table;
 use Framework\Validator\ValidatorError;
 
 class Validator
@@ -94,6 +95,12 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie que la clé est un dateTime
+     * @param string $key
+     * @param string $format
+     * @return self
+     */
     public function dateTime(string $key, string $format = 'Y-m-d H:i:s'): self
     {
         $value = $this->getValue($key);
@@ -102,6 +109,26 @@ class Validator
         if ($errors['error_count'] > 0 || $errors['warning_count'] > 0 || !$date) {
             $this->addError($key, 'datetime', [$format]);
         }
+        return $this;
+    }
+
+    /**
+     * Vérifie que la clef existe dans la table donnée
+     * @param string $key
+     * @param string $table
+     * @param \PDO $pdo
+     * @return self
+     */
+    public function exists(string $key, string $table, \PDO $pdo): self
+    {
+        
+        $value = $this->getValue($key);
+        $statement = $pdo->prepare("SELECT id FROM {$table} WHERE id = ?");
+        $statement->execute([$value]);
+        if ($statement->fetchColumn() === false) {
+            $this->addError($key, 'exists', [$table]);
+        }
+
         return $this;
     }
 

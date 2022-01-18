@@ -17,20 +17,17 @@ class DatabaseTestCase extends TestCase
      * @var PDO
      */
     protected $pdo;
-    
-    /**
-     * manager
-     *
-     * @var Manager
-     */
-    private $manager;
-    
-    public function setUp(): void
-    {
-        $pdo = new PDO('sqlite::memory:', null, null, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
 
+    public function getPdo()
+    {
+        return new PDO('sqlite::memory:', null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ
+        ]);
+    }
+
+    public function getManager(\PDO $pdo)
+    {
         $configArray = require('phinx.php');
         $configArray['environments']['testing'] = [
             'adapter' => 'sqlite',
@@ -38,20 +35,21 @@ class DatabaseTestCase extends TestCase
         ];
 
         $config = new Config($configArray);
-        $manager = new Manager($config, new StringInput(' '), new NullOutput());
-
-        $manager->migrate('testing');
-        $this->manager = $manager;
-
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-
-        $this->pdo = $pdo;
+        return new Manager($config, new StringInput(' '), new NullOutput());
     }
 
-    public function seedDatabase(): void
+    public function seedDatabase(\PDO $pdo): void
     {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
-        $this->manager->seed('testing');
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
+        $this->getManager($pdo)->migrate('testing');
+        $this->getManager($pdo)->seed('testing');
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    }
+
+    public function migrateDatabase(\PDO $pdo): void
+    {
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_BOTH);
+        $this->getManager($pdo)->migrate('testing');
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
 }

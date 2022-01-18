@@ -15,7 +15,8 @@ class ValidatorError
         'minlength' => 'Le champs %s doit contenir plus de %d caractères',
         'maxlength' => 'Le champs %s doit contenir moins de %d caractères',
         'between' => 'Le champs %s doit contenir entre %d et %d caractères',
-        'datetime' => 'Le champs %s doit être une date valide (%s)'
+        'datetime' => 'Le champs %s doit être une date valide (%s)',
+        'exists' => 'Le champs %s n\'existe pas sur la table %s'
     ];
 
     private $attributes;

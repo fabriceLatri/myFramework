@@ -33,6 +33,7 @@ class PostCrudAction extends CrudAction
     protected function formParams(array $params): array
     {
         $params['categories'] = $this->categoryTable->findList();
+        $params['categories']['1234'] = 'Catégorie fake';
         return $params;
     }
 
@@ -59,10 +60,11 @@ class PostCrudAction extends CrudAction
     protected function getValidator(ServerRequestInterface $request): \Framework\Validator
     {
         return parent::getValidator($request)
-            ->required('content', 'name', 'slug', 'created_at')
+            ->required('content', 'name', 'slug', 'created_at', 'category_id')
             ->length('content', 10)
             ->length('name', 2, 250)
             ->length('slug', 2, 50)
+            ->exists('category_id', $this->categoryTable->getTable(), $this->categoryTable->getPdo())
             ->datetime('created_at')
             ->slug('slug');
     }
