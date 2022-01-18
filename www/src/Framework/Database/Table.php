@@ -58,6 +58,24 @@ class Table
     {
         return "SELECT * FROM " . $this->table;
     }
+
+    /**
+     * Récupère une liste clef valeur de nos enregistrements
+     * @return string[]
+     */
+    public function findList(): array
+    {
+        $results = $this->pdo
+            ->query("SELECT id, name FROM {$this->table}")
+            ->fetchAll(\PDO::FETCH_NUM);
+
+        $list = [];
+        foreach ($results as $result) {
+            $list[$result[0]] = $result[1];
+        }
+
+        return $list;
+    }
     
     /**
      * Récupère un élément à partir de son id

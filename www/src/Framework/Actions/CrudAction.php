@@ -126,7 +126,10 @@ class CrudAction
             $item = $params;
         }
 
-        return $this->renderer->render($this->viewPath . '/edit', compact('item', 'errors'));
+        return $this->renderer->render(
+            $this->viewPath . '/edit',
+            $this->formParams(compact('item', 'errors'))
+        );
     }
 
     /**
@@ -152,7 +155,10 @@ class CrudAction
             $errors = $validator->getErrors();
         }
 
-        return $this->renderer->render($this->viewPath . '/create', compact('item', 'errors'));
+        return $this->renderer->render(
+            $this->viewPath . '/create',
+            $this->formParams(compact('item', 'errors'))
+        );
     }
     
     /**
@@ -181,13 +187,33 @@ class CrudAction
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    protected function getValidator(Request $request)
+    /**
+     * Génère le validateur pour valider les données
+     * @param Request $request
+     * @return \Framework\Validator
+     */
+    protected function getValidator(Request $request): Validator
     {
         return (new Validator($request->getParsedBody()));
     }
 
+    /**
+     * Génère une nouvelle entité
+     * @return mixed
+     */
     protected function getNewEntity()
     {
         return [];
+    }
+
+    /**
+     * Permet de traiter les paramètres à envoyer à la vue
+     * @param array $params
+     *
+     * @return array
+     */
+    protected function formParams(array $params): array
+    {
+        return $params;
     }
 }

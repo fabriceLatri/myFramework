@@ -43,4 +43,11 @@ class TableTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $test);
         $this->assertEquals('a1', $test->name);
     }
+
+    public function testFindList()
+    {
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a1");');
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a2");');
+        $this->assertEquals([ '1' => 'a1', '2' => 'a2' ], $this->table->findList());
+    }
 }

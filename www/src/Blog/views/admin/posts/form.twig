@@ -3,11 +3,12 @@
     {{ field('name', item.name, "Titre de l'article") }}
   </div>
   <div class="col-md-4">
-    {{ field('category_id', item.category_id, "Catégorie") }}
+    {{ field('category_id', item.category_id, "Catégorie", {options: categories}) }}
   </div>
   <div class="col-md-4">
     {{ field('slug', item.slug, "Lien de l'article") }}
   </div>
 </div>
+{{ dump(categories) }} 
 {{ field('content', item.content, "Contenu de l'article", {type: 'textarea'}) }}
 {{ field('created_at', item.created_at, "Date de création", {class: 'datepicker'}) }}
