@@ -11,7 +11,7 @@ class Table
      *
      * @var \PDO
      */
-    private $pdo;
+    protected $pdo;
 
     /**
      * Nom de la table en BDD
@@ -75,6 +75,24 @@ class Table
         }
 
         return $list;
+    }
+
+    /**
+     * Récupère tous nos enregistrements d'une table donnée
+     * @return array
+     */
+    public function findAll(): array
+    {
+        $statement = $this->pdo
+            ->query("SELECT * FROM {$this->table}");
+
+        if ($this->entity) {
+            $statement->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
+        } else {
+            $statement->setFetchMode(\PDO::FETCH_OBJ);
+        }
+
+        return $statement->fetchAll();
     }
     
     /**
