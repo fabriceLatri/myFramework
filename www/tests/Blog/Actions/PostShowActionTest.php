@@ -3,15 +3,14 @@
 namespace Test\Blog\Actions;
 
 use Framework\Router;
-use PHPUnit\Framework\TestCase;
-use App\Blog\Actions\BlogAction;
+use Prophecy\Argument;
 use App\Blog\Entity\Post;
 use App\Blog\Table\PostTable;
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
 use Prophecy\PhpUnit\ProphecyTrait;
+use App\Blog\Actions\PostShowAction;
 use Framework\Renderer\RendererInterface;
-use PhpParser\Node\Arg;
-use Prophecy\Argument;
 
 class BlogActionTest extends TestCase
 {
@@ -53,7 +52,7 @@ class BlogActionTest extends TestCase
 
         // Router
         $this->router = $this->prophesize(Router::class);
-        $this->action = new BlogAction(
+        $this->action = new PostShowAction(
             $this->renderer->reveal(),
             $this->router->reveal(),
             $this->postTable->reveal(),

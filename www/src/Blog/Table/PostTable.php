@@ -37,6 +37,25 @@ class PostTable extends Table
             ->setCurrentPage($currentPage);
     }
 
+    public function findPaginatedPublicForCategory(int $perPage, int $currentPage, int $categoryId): Pagerfanta
+    {
+        $query = new PaginatedQuery(
+            $this->pdo,
+            "SELECT p.*, c.name AS category_name, c.slug AS category_slug
+            FROM posts AS p 
+            LEFT JOIN categories AS c ON c.id = p.category_id 
+            WHERE p.category_id = :category
+            ORDER BY p.created_at DESC",
+            "SELECT COUNT(id) FROM {$this->table} WHERE category_id = :category",
+            $this->entity,
+            ['category' => $categoryId]
+        );
+
+        return (new Pagerfanta($query))
+            ->setMaxPerPage($perPage)
+            ->setCurrentPage($currentPage);
+    }
+
     protected function paginationQuery(): string
     {
         return "SELECT p.id, p.name, c.name category_name

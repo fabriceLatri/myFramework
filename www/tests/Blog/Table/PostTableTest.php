@@ -5,6 +5,7 @@ namespace Test\Blog\Table;
 use PDO;
 use App\Blog\Entity\Post;
 use App\Blog\Table\PostTable;
+use Framework\Database\NoRecordException;
 use Tests\DatabaseTestCase;
 
 class PostTableTest extends DatabaseTestCase
@@ -28,8 +29,8 @@ class PostTableTest extends DatabaseTestCase
 
     public function testFindNotFoundRecord()
     {
-        $post = $this->postTable->find(1000000);
-        $this->assertNull($post);
+        $this->expectException(NoRecordException::class);
+        $this->postTable->find(1);
     }
 
     public function testUpdateField()

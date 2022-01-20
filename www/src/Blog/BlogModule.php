@@ -4,10 +4,12 @@ namespace App\Blog;
 
 use Framework\Module;
 use Framework\Router;
-use App\Blog\Actions\BlogAction;
 use App\Blog\Actions\PostCrudAction;
+use App\Blog\Actions\PostShowAction;
+use App\Blog\Actions\PostIndexAction;
 use Psr\Container\ContainerInterface;
 use App\Blog\Actions\CategoryCrudAction;
+use App\Blog\Actions\CategoryShowAction;
 use Framework\Renderer\RendererInterface;
 
 class BlogModule extends Module
@@ -26,8 +28,13 @@ class BlogModule extends Module
         );
         $router = $container->get(Router::class);
         $router->addMatchTypes(array('slug' => '[a-z\-0-9]+'));
-        $router->get($container->get('blog.prefix') . '/[slug:slug]-[i:id]', BlogAction::class, 'blog.show');
-        $router->get($container->get('blog.prefix'), BlogAction::class, 'blog.index');
+        $router->get($container->get('blog.prefix'), PostIndexAction::class, 'blog.index');
+        $router->get($container->get('blog.prefix') . '/[slug:slug]-[i:id]', PostShowAction::class, 'blog.show');
+        $router->get(
+            $container->get('blog.prefix') . '/category/[slug:slug]',
+            CategoryShowAction::class,
+            'blog.category'
+        );
         
         if ($container->has('admin.prefix')) {
             $prefix = $container->get('admin.prefix');

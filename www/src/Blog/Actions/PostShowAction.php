@@ -10,7 +10,7 @@ use Framework\Router;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class BlogAction
+class PostShowAction
 {
     /**
      * renderer
@@ -33,45 +33,19 @@ class BlogAction
      */
     private $router;
 
-    /**
-     * @var CategoryTable
-     */
-    private $categoryTable;
-
     use RouterAwareAction;
 
     public function __construct(
         RendererInterface $renderer,
         Router $router,
         PostTable $postTable,
-        CategoryTable $categoryTable
     ) {
         $this->renderer = $renderer;
         $this->postTable = $postTable;
         $this->router = $router;
-        $this->categoryTable = $categoryTable;
     }
 
     public function __invoke(Request $request)
-    {
-        return $request->getAttribute('id') ? $this->show($request) : $this->index($request);
-    }
-
-    public function index(Request $request): string
-    {
-        $params = $request->getQueryParams();
-        $posts = $this->postTable->findPaginatedPublic(12, $params['p'] ?? 1);
-        return $this->renderer->render('@blog/index', compact('posts'));
-    }
-
-    
-    /**
-     * Rend une vue d'un post
-     *
-     * @param  mixed $request
-     * @return ResponseInterface|string
-     */
-    public function show(Request $request)
     {
         $slug = $request->getAttribute('slug');
         $post = $this->postTable->find($request->getAttribute('id'));

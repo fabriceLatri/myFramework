@@ -1,13 +1,22 @@
 {% extends "layout.twig" %}
 
-{% block title "Mes articles"%}
+{% block title%}
+{% if category %}
+  Catégorie: {{ category.name }}{% if page > 1 %}, page {{ page }} {% endif %}
+{% else %}
+  Blog{% if page > 1 %}, page {{ page }} {% endif %}
+{% endif %}
+{% endblock %}
 
 {% block body %}
-<h1>Bienvenue sur le blog</h1>
+{% if category %}
+  <h1>Catégorie: {{ category.name }}{% if page > 1 %}, page {{ page }} {% endif %}</h1>
+{% else %}
+  <h1>Bienvenue sur le blog{% if page > 1 %}, page {{ page }} {% endif %}</h1>
+{% endif %}
 
 <div class="row">
   <div class="col-md-9">
-    <div class="row">
       {% for row in posts | batch(4) %}
       <div class="card-deck">
         {% for post in row %}
@@ -32,19 +41,29 @@
 
           </div>
           <div class="card-footer">
-            <a href="{{ path('blog.show', { 'slug': post.slug, id: post.id }) }}" class="btn-primary">Voir l'article</a>
+            <a href="{{ path('blog.show', { 'slug': post.slug, id: post.id }) }}" class="btn btn-primary">Voir l'article</a>
           </div>
         </div>
         {% endfor %}
       </div>
       <br />
       {% endfor %}
-    </div>
 
-
-    {{ paginate(posts, 'blog.index') }}
+    {% if category %}
+      {{ paginate(posts, 'blog.category', { slug: category.slug }) }}
+    {% else %}
+      {{ paginate(posts, 'blog.index') }}
+    {% endif %}
+    
   </div>
   <div class="col-md-3">
+    <ul class="list-group">
+      {% for category in categories %}
+      <li class="list-group-item">
+        <a href="{{ path('blog.category', {slug: category.slug}) }}">{{ category.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </div>
 {% endblock %}

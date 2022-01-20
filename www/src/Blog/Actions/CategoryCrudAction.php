@@ -7,6 +7,7 @@ use App\Blog\Table\CategoryTable;
 use Framework\Actions\CrudAction;
 use Framework\Session\FlashService;
 use Framework\Renderer\RendererInterface;
+use Framework\Validator;
 use Psr\Http\Message\ServerRequestInterface;
 
 class CategoryCrudAction extends CrudAction
@@ -37,7 +38,7 @@ class CategoryCrudAction extends CrudAction
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    protected function getValidator(ServerRequestInterface $request)
+    protected function getValidator(ServerRequestInterface $request): Validator
     {
         return parent::getValidator($request)
             ->required('name', 'slug')
