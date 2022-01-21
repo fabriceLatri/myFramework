@@ -104,26 +104,9 @@ class Table
      */
     public function findBy(string $field, string $value)
     {
-        $query = $this->pdo
-            ->prepare("SELECT * FROM {$this->table} WHERE $field = ?");
-        $query->execute([$value]);
-
-        if ($this->entity) {
-            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
-        } else {
-            $query->setFetchMode(\PDO::FETCH_OBJ);
-        }
-
-        $record = $query->fetch();
-
-        if ($record === false) {
-            throw new NoRecordException();
-        }
-        return $record;
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE $field = ?", [$value]);
     }
 
-    
-    
     /**
      * Récupère un élément à partir de son id
      *
@@ -133,18 +116,7 @@ class Table
      */
     public function find(int $id)
     {
-        $query = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id= ?");
-        $query->execute([$id]);
-        if ($this->entity) {
-            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
-        }
-
-        $record = $query->fetch();
-
-        if ($record === false) {
-            throw new NoRecordException();
-        }
-        return $record;
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE id= ?", [$id]);
     }
     
     /**
@@ -246,5 +218,28 @@ class Table
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    /**
+     * Exécute une requête et de récuperer le premier résultat
+     * @param string $query
+     * @param array $params
+     * @throws NoRecordException
+     * @return mixed
+     */
+    protected function fetchOrFail(string $query, array $params = []): mixed
+    {
+        $query = $this->pdo->prepare($query);
+        $query->execute($params);
+        if ($this->entity) {
+            $query->setFetchMode(\PDO::FETCH_CLASS, $this->entity);
+        }
+
+        $record = $query->fetch();
+
+        if ($record === false) {
+            throw new NoRecordException();
+        }
+        return $record;
     }
 }

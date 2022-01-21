@@ -56,6 +56,15 @@ class PostTable extends Table
             ->setCurrentPage($currentPage);
     }
 
+    public function findWithCategory(int $id)
+    {
+        return $this->fetchOrFail('SELECT p.*, c.name category_name, c.slug category_slug
+            FROM posts AS p
+            LEFT JOIN categories AS c ON c.id = p.category_id
+            WHERE p.id = ? 
+        ', [$id]);
+    }
+
     protected function paginationQuery(): string
     {
         return "SELECT p.id, p.name, c.name category_name
