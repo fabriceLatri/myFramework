@@ -23,7 +23,7 @@ class CrudAction
      *
      * @var Table
      */
-    private $table;
+    protected $table;
 
     /**
      * router

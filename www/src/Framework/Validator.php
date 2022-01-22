@@ -132,6 +132,32 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie que la clé est unique dans la base de données.
+     * @param string $key
+     * @param string $table
+     * @param \PDO $pdo
+     * @param int|null $exclude
+     * @return self
+     */
+    public function unique(string $key, string $table, \PDO $pdo, ?int $exclude = null): self
+    {
+        $value = $this->getValue($key);
+        $query = "SELECT id FROM {$table} WHERE $key = ?";
+        $params = [$value];
+        if (!is_null($exclude)) {
+            $query .= " AND id != ?";
+            $params[] = $exclude;
+        }
+        $statement = $pdo->prepare($query);
+        $statement->execute($params);
+        if ($statement->fetchColumn() !== false) {
+            $this->addError($key, 'unique', [$value]);
+        }
+
+        return $this;
+    }
+
     public function isValid(): bool
     {
         return empty($this->errors);
