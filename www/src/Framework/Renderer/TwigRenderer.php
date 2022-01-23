@@ -54,4 +54,12 @@ class TwigRenderer implements RendererInterface
     {
         return $this->loader->getPaths();
     }
+
+    /**
+     * Get the value of twig
+     */
+    public function getTwig()
+    {
+        return $this->twig;
+    }
 }
